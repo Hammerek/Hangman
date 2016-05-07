@@ -1,6 +1,6 @@
 ﻿namespace Hangman
 {
-    partial class Form1
+    partial class MainPage
     {
         /// <summary>
         /// Required designer variable.
@@ -111,7 +111,7 @@
             this.Controls.Add(this.newWord);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainPage";
             this.Text = "Hangman";
             this.ResumeLayout(false);
             this.PerformLayout();

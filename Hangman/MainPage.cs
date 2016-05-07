@@ -13,7 +13,7 @@ namespace Hangman
     /// <summary>
     /// 
     /// </summary>
-    public partial class Form1 : Form
+    public partial class MainPage : Form
     {
         string[] _words = new string[10] //array
       {
@@ -27,7 +27,7 @@ namespace Hangman
         int _missTries = 0; //missade försök
         const int NUMBEROFTRIES = 5; //konstant variabel
 
-        public Form1()
+        public MainPage()
         {
             InitializeComponent();
             checkWord.Enabled = false; //button är stängt från början
