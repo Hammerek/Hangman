@@ -15,11 +15,11 @@ namespace Hangman
     /// </summary>
     public partial class MainPage : Form
     {
-        private Hangman hangman;
+        private readonly Hangman _hangman;
         public MainPage()
         {
             InitializeComponent();
-            hangman = new Hangman(this);
+            _hangman = new Hangman(this);
             checkWord.Enabled = false; //button är stängt från början
             textBox1.KeyDown += TextBox1OnKeyDown;//med varje bokstav i textboxen använder metoden
             textBox1.ReadOnly = true; //man får inte skriva i textboxen från början
@@ -30,7 +30,7 @@ namespace Hangman
             {
                 checkWord_Click(sender, keyEventArgs); //använder enter som mus click
             }
-            var a = hangman.LeftTries(); //tilldelar uträkning till en variabel så att man behöver inte skriva så mycket
+            var a = _hangman.LeftTries; //tilldelar uträkning till en variabel så att man behöver inte skriva så mycket
 
             if (a == 0) //gör så att man får inte MsgBox när man får inte gissa längre
             {
@@ -51,7 +51,7 @@ namespace Hangman
         private void newWord_Click(object sender, EventArgs e)
         {
             Clear(); //Clear metod
-            hangman.GenerateNewWord();
+            _hangman.GenerateNewWord();
             UpdateUI(); //metod för update
         }
         /// <summary>
@@ -65,25 +65,25 @@ namespace Hangman
             }
             var txt = textBox1.Text.ToLower(); //variabel till textboxen och metod som byter bokstaver till småa
             textBox1.Text = ""; //tömmer textbox
-            hangman.CheckLetters(txt);
+            _hangman.CheckLetters(txt);
         }
         private void Clear() //metod som tömmer variablar, textboxen, öppnar button och gör Update metoden
         {
             textBox1.ReadOnly = false; //man får skriva i texboxen
             label4.Text = "";
-            hangman.Clear();
+            _hangman.Clear();
             checkWord.Enabled = true;
             UpdateUI();
         }
         public void UpdateUI() //uppdaterar label
         {
-            label2.Text = "Antal försök kvar: " + hangman.LeftTries(); //räknar antal försök
-            if (hangman.IsGameOver()) //om fel gissade försök är lika med fem
+            label2.Text = "Antal försök kvar: " + _hangman.LeftTries; //räknar antal försök
+            if (_hangman.IsGameOver) //om fel gissade försök är lika med fem
             {
                 checkWord.Enabled = false; //man stänger ner knappen
                 textBox1.ReadOnly = true;
             }
-            label1.Text = hangman.HiddenWord(); //visal ord med undertecken i labeln
+            label1.Text = _hangman.HiddenWord; //visal ord med undertecken i labeln
         }
         public void ShowUsedLetters(string usedLetters)
         {

@@ -9,47 +9,27 @@ namespace Hangman
 {
     public class Hangman
     {
-        private string[] _words = new string[10] //array
+        private readonly string[] _words = new string[10] //array
         {
             "hentai", "tangentbord", "yuri", "oppai", "loli", "gothic", "programming", "witcher", "anime", "radio"
         };
-
-        private List<char> usedLetters = new List<char>(); //listan för bokstaver som man skrev i textboxen
-        private Random _random = new Random(); //gör nytt random klass
+        private readonly List<char> _usedLetters = new List<char>(); //listan för bokstaver som man skrev i textboxen
+        private readonly Random _random = new Random(); //gör nytt random klass
         private char[] _currentWord; //ord som man gissar
-        private char[] _currentWordShow; //ord som man visar i labeln
-        private int _allTries = 0; //alla försök
+        private char[] _currentWordShow; //ord som man visar i labeln        
         private int _missTries = 0; //missade försök
         private const int NUMBEROFTRIES = 5;
-        private MainPage mainPage;
+        private readonly MainPage _mainPage;
 
         public Hangman(MainPage mainPage)
         {
-            this.mainPage = mainPage;
+            this._mainPage = mainPage;
         }
-
-        public int LeftTries()
-        {
-            return NUMBEROFTRIES - _missTries;
-        }
-
         public void Clear()
         {
-            usedLetters.Clear();
-            _allTries = 0; //sätter värde på en variabel som 0 
+            _usedLetters.Clear();
             _missTries = 0;
         }
-
-        public bool IsGameOver()
-        {
-            return _missTries == NUMBEROFTRIES;
-        }
-
-        internal string HiddenWord()
-        {
-            return new string(_currentWordShow);
-        }
-
         public void GenerateNewWord()
         {
             var index = _random.Next(0, _words.Length - 1); //väljer en random ord från arrayen mellan 0 och words.Length
@@ -60,19 +40,17 @@ namespace Hangman
                 _currentWordShow[i] = '_';  //sätter undertecken i chararrayen
             }
         }
-
         public void CheckLetters(string txt)
         {
             foreach (var c in txt) //för varje tecken i textboxen
             {
-                _allTries++; //ökar alla försök
-                if (usedLetters.Contains(c)) //om listan innehåller tecken från texboxen
+                if (_usedLetters.Contains(c)) //om listan innehåller tecken från texboxen
                 {
                     continue; //då kör man programmet vidare
                 }
                 //man lägger till bokstaven från textboxen till listan, sen konventerar man det till string för att returnera det som en liten bokstav
-                usedLetters.Add(c.ToString().ToLower().ToCharArray()[0]); //sen konverterar man det igen till CharArray
-                mainPage.ShowUsedLetters(new string(usedLetters.ToArray())); //man skriver ut bokstäver till labeln
+                _usedLetters.Add(c.ToString().ToLower().ToCharArray()[0]); //sen konverterar man det igen till CharArray
+                _mainPage.ShowUsedLetters(new string(_usedLetters.ToArray())); //man skriver ut bokstäver till labeln
                 if (_currentWord.Contains(c)) //om ord innehåller tecken från textbox
                 {
                     ReplaceChar(c); //man gör replacement på _currentWordShow = byter '_' för rätt tecken i textboxen
@@ -81,10 +59,10 @@ namespace Hangman
                 {
                     _missTries++; //ökar antalet försök
                 }
-                mainPage.UpdateUI(); //metod för Update
-                if (IsWin()) //om metoden är true
+                _mainPage.UpdateUI(); //metod för Update
+                if (IsWin) //om metoden är true
                 {
-                    mainPage.MarkWin();
+                    _mainPage.MarkWin();
                 }
                 if (_missTries >= Hangman.NUMBEROFTRIES) //om man hade gissat fel 5 gånger 
                 {
@@ -102,10 +80,10 @@ namespace Hangman
                 }
             }
         }
-        private bool IsWin() //win metod som sen visar MessageBox med meddelande i if-satsen att man gissade rätt orden 
-        {
-            return !_currentWordShow.Contains('_'); //om variabel inte innehåller undertecken då är det win
-        }
 
+        private bool IsWin => !_currentWordShow.Contains('_');
+        public int LeftTries => NUMBEROFTRIES - _missTries;
+        public bool IsGameOver => _missTries == NUMBEROFTRIES;
+        public string HiddenWord => new string(_currentWordShow);
     }
 }
