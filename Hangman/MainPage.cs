@@ -1,29 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Hangman
 {
     /// <summary>
-    /// 
     /// </summary>
     public partial class MainPage : Form
     {
         private readonly Hangman _hangman;
+
         public MainPage()
         {
             InitializeComponent();
             _hangman = new Hangman(this);
             checkWord.Enabled = false; //button är stängt från början
-            textBox1.KeyDown += TextBox1OnKeyDown;//med varje bokstav i textboxen använder metoden
+            textBox1.KeyDown += TextBox1OnKeyDown; //med varje bokstav i textboxen använder metoden
             textBox1.ReadOnly = true; //man får inte skriva i textboxen från början
         }
+
         private void TextBox1OnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
             if (keyEventArgs.KeyCode == Keys.Enter) //om man trycker enter då behöver man inte clicka med musen
@@ -42,11 +36,13 @@ namespace Hangman
             }
             if (textBox1.Text.Length > a) //om antal tecken i texboxen är större än a
             {
-                textBox1.Text = textBox1.Text.Substring(0, a); //tar bort tecken i texboxen om man försöker skriva mer än 5 
+                textBox1.Text = textBox1.Text.Substring(0, a);
+                    //tar bort tecken i texboxen om man försöker skriva mer än 5 
             }
         }
+
         /// <summary>
-        /// Button gör så att väljer nytt ord och sätter det i labeln. 
+        ///     Button gör så att väljer nytt ord och sätter det i labeln.
         /// </summary>
         private void newWord_Click(object sender, EventArgs e)
         {
@@ -54,8 +50,9 @@ namespace Hangman
             _hangman.GenerateNewWord();
             UpdateUI(); //metod för update
         }
+
         /// <summary>
-        /// Button som checkar om ordet innehåller tecken från textboxen. 
+        ///     Button som checkar om ordet innehåller tecken från textboxen.
         /// </summary>
         private void checkWord_Click(object sender, EventArgs e)
         {
@@ -67,6 +64,7 @@ namespace Hangman
             textBox1.Text = ""; //tömmer textbox
             _hangman.CheckLetters(txt);
         }
+
         private void Clear() //metod som tömmer variablar, textboxen, öppnar button och gör Update metoden
         {
             textBox1.ReadOnly = false; //man får skriva i texboxen
@@ -75,6 +73,7 @@ namespace Hangman
             checkWord.Enabled = true;
             UpdateUI();
         }
+
         public void UpdateUI() //uppdaterar label
         {
             label2.Text = "Antal försök kvar: " + _hangman.LeftTries; //räknar antal försök
@@ -85,6 +84,7 @@ namespace Hangman
             }
             label1.Text = _hangman.HiddenWord; //visal ord med undertecken i labeln
         }
+
         public void ShowUsedLetters(string usedLetters)
         {
             label4.Text = usedLetters;

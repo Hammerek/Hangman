@@ -1,45 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Hangman
 {
     public class Hangman
     {
+        private const int NUMBEROFTRIES = 5;
+        private readonly MainPage _mainPage;
+        private readonly Random _random = new Random(); //gör nytt random klass
+        private readonly List<char> _usedLetters = new List<char>(); //listan för bokstaver som man skrev i textboxen
+
         private readonly string[] _words = new string[10] //array
         {
             "hentai", "tangentbord", "yuri", "oppai", "loli", "gothic", "programming", "witcher", "anime", "radio"
         };
-        private readonly List<char> _usedLetters = new List<char>(); //listan för bokstaver som man skrev i textboxen
-        private readonly Random _random = new Random(); //gör nytt random klass
+
         private char[] _currentWord; //ord som man gissar
         private char[] _currentWordShow; //ord som man visar i labeln        
-        private int _missTries = 0; //missade försök
-        private const int NUMBEROFTRIES = 5;
-        private readonly MainPage _mainPage;
+        private int _missTries; //missade försök
 
         public Hangman(MainPage mainPage)
         {
-            this._mainPage = mainPage;
+            _mainPage = mainPage;
         }
+
+        private bool IsWin => !_currentWordShow.Contains('_');
+        public int LeftTries => NUMBEROFTRIES - _missTries;
+        public bool IsGameOver => _missTries == NUMBEROFTRIES;
+        public string HiddenWord => new string(_currentWordShow);
+
         public void Clear()
         {
             _usedLetters.Clear();
             _missTries = 0;
         }
+
         public void GenerateNewWord()
         {
-            var index = _random.Next(0, _words.Length - 1); //väljer en random ord från arrayen mellan 0 och words.Length
+            var index = _random.Next(0, _words.Length - 1);
+                //väljer en random ord från arrayen mellan 0 och words.Length
             _currentWord = _words[index].ToCharArray(); //en random ord konverterad till Char
             _currentWordShow = new char[_currentWord.Length]; //gör en ny char array till variabeln som man visar
             for (var i = 0; i < _currentWord.Length; i++) //för varje tecken i currentWord
             {
-                _currentWordShow[i] = '_';  //sätter undertecken i chararrayen
+                _currentWordShow[i] = '_'; //sätter undertecken i chararrayen
             }
         }
+
         public void CheckLetters(string txt)
         {
             foreach (var c in txt) //för varje tecken i textboxen
@@ -64,12 +72,13 @@ namespace Hangman
                 {
                     _mainPage.MarkWin();
                 }
-                if (_missTries >= Hangman.NUMBEROFTRIES) //om man hade gissat fel 5 gånger 
+                if (_missTries >= NUMBEROFTRIES) //om man hade gissat fel 5 gånger 
                 {
                     break; //avslutar foreach
                 }
             }
         }
+
         private void ReplaceChar(char c) //metod för att byta undertecken till tecken som finns i orden
         {
             for (var i = 0; i < _currentWordShow.Length; i++) //går igenom ord med undertecken
@@ -80,10 +89,5 @@ namespace Hangman
                 }
             }
         }
-
-        private bool IsWin => !_currentWordShow.Contains('_');
-        public int LeftTries => NUMBEROFTRIES - _missTries;
-        public bool IsGameOver => _missTries == NUMBEROFTRIES;
-        public string HiddenWord => new string(_currentWordShow);
     }
 }
